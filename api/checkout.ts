@@ -24,6 +24,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         first_name,
         last_name,
         phone,
+        redirect_url: `${process.env.SITE_URL}/merci?sale={sale_id}`,
       }),
     });
 
