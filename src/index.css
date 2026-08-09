@@ -1,6 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@theme {
+    --color-primary: #0F172A;
+    --color-accent: #2563EB;
+    --color-soft: #F8FAFC;
+    --font-sans: "Inter", sans-serif;
+}
+
 html {
     scroll-behavior: smooth;
 }
