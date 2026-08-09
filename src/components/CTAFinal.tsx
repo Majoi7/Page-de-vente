@@ -1,20 +1,21 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 
-const indicatifs = [
-  { code: "229", label: "Bénin (+229)" },
-  { code: "225", label: "Côte d'Ivoire (+225)" },
-  { code: "221", label: "Sénégal (+221)" },
-  { code: "237", label: "Cameroun (+237)" },
-  { code: "33", label: "France (+33)" },
-  { code: "1", label: "USA/Canada (+1)" },
+const pays = [
+  { iso: "BJ", indicatif: "229", label: "Bénin (+229)" },
+  { iso: "CI", indicatif: "225", label: "Côte d'Ivoire (+225)" },
+  { iso: "SN", indicatif: "221", label: "Sénégal (+221)" },
+  { iso: "CM", indicatif: "237", label: "Cameroun (+237)" },
+  { iso: "FR", indicatif: "33", label: "France (+33)" },
+  { iso: "US", indicatif: "1", label: "USA (+1)" },
+  { iso: "CA", indicatif: "1", label: "Canada (+1)" },
 ];
 
 export default function CTAFinal() {
   const [prenom, setPrenom] = useState("");
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
-  const [indicatif, setIndicatif] = useState("229");
+  const [paysChoisi, setPaysChoisi] = useState("BJ");
   const [telephone, setTelephone] = useState("");
   const [loading, setLoading] = useState(false);
   const [erreur, setErreur] = useState("");
@@ -34,7 +35,7 @@ export default function CTAFinal() {
           last_name: nom,
           phone: {
             number: telephone.replace(/\s+/g, ""),
-            country_code: indicatif,
+            country_code: paysChoisi,
           },
         }),
       });
@@ -111,12 +112,12 @@ export default function CTAFinal() {
 
           <div className="grid grid-cols-[auto_1fr] gap-4">
             <select
-              value={indicatif}
-              onChange={(e) => setIndicatif(e.target.value)}
+              value={paysChoisi}
+              onChange={(e) => setPaysChoisi(e.target.value)}
               className="px-3 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-accent bg-white"
             >
-              {indicatifs.map((item) => (
-                <option key={item.code} value={item.code}>
+              {pays.map((item) => (
+                <option key={item.iso} value={item.iso}>
                   {item.label}
                 </option>
               ))}
