@@ -7,7 +7,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { email, first_name, last_name, phone } = req.body;
 
-  if (!email || !first_name || !last_name) {
+  if (!email || !first_name || !last_name || !phone?.number || !phone?.country_code) {
     return res.status(400).json({ message: "Champs requis manquants" });
   }
 

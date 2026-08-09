@@ -1,10 +1,21 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 
+const indicatifs = [
+  { code: "229", label: "Bénin (+229)" },
+  { code: "225", label: "Côte d'Ivoire (+225)" },
+  { code: "221", label: "Sénégal (+221)" },
+  { code: "237", label: "Cameroun (+237)" },
+  { code: "33", label: "France (+33)" },
+  { code: "1", label: "USA/Canada (+1)" },
+];
+
 export default function CTAFinal() {
   const [prenom, setPrenom] = useState("");
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
+  const [indicatif, setIndicatif] = useState("229");
+  const [telephone, setTelephone] = useState("");
   const [loading, setLoading] = useState(false);
   const [erreur, setErreur] = useState("");
 
@@ -17,13 +28,24 @@ export default function CTAFinal() {
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, first_name: prenom, last_name: nom }),
+        body: JSON.stringify({
+          email,
+          first_name: prenom,
+          last_name: nom,
+          phone: {
+            number: telephone.replace(/\s+/g, ""),
+            country_code: indicatif,
+          },
+        }),
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        setErreur(result.message || "Une erreur est survenue.");
+        const messagesErreur = result.errors
+          ? Object.values(result.errors).flat().join(" ")
+          : result.message;
+        setErreur(messagesErreur || "Une erreur est survenue.");
         setLoading(false);
         return;
       }
@@ -77,6 +99,7 @@ export default function CTAFinal() {
               className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
+
           <input
             type="email"
             placeholder="Adresse e-mail"
@@ -85,6 +108,28 @@ export default function CTAFinal() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-accent"
           />
+
+          <div className="grid grid-cols-[auto_1fr] gap-4">
+            <select
+              value={indicatif}
+              onChange={(e) => setIndicatif(e.target.value)}
+              className="px-3 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-accent bg-white"
+            >
+              {indicatifs.map((item) => (
+                <option key={item.code} value={item.code}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              placeholder="Numéro de téléphone"
+              required
+              value={telephone}
+              onChange={(e) => setTelephone(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
 
           {erreur && <p className="text-red-600 text-sm">{erreur}</p>}
 
